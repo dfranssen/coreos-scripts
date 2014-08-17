@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce to Vulcand dfranssen_docker-jenkins-master_latest.service
+BindsTo=dfranssen_docker-jenkins-master_latest.service
+After=dfranssen_docker-jenkins-master_latest.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl set \"/vulcand/upstreams/jenkins-master/endpoints/announce-dfranssen_docker-jenkins-master_latest-A.service\" http://%H:8080 --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /vulcand/upstreams/jenkins-master/endpoints/announce-dfranssen_docker-jenkins-master_latest-A.service
+
+[X-Fleet]
+X-ConditionMachineOf=dfranssen_docker-jenkins-master_latest.service

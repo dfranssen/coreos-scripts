@@ -4,6 +4,9 @@ BindsTo=dfranssen_docker-jenkins-master_latest.service
 After=dfranssen_docker-jenkins-master_latest.service
 
 [Service]
+ExecStartPre=/bin/sh -c "etcdctl mkdir /vulcand/upstreams/jenkins-master || true"
+ExecStartPre=/usr/bin/etcdctl set /vulcand/hosts/dev.jeeble.be/locations/jenkins/upstream jenkins-master
+ExecStartPre=/usr/bin/etcdctl set /vulcand/hosts/dev.jeeble.be/locations/jenkins/path '/jenkins/.*'
 ExecStart=/bin/sh -c "while true; do etcdctl set \"/vulcand/upstreams/jenkins-master/endpoints/announce-dfranssen_docker-jenkins-master_latest-A.service\" http://%H:8080 --ttl 60;sleep 45;done"
 ExecStop=/usr/bin/etcdctl rm /vulcand/upstreams/jenkins-master/endpoints/announce-dfranssen_docker-jenkins-master_latest-A.service
 
